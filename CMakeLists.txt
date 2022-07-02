@@ -19,7 +19,17 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        bigintutils.h
+        bigintutils.cpp
 )
+
+set(TEST_SOURCES
+        tests.h
+        tests.cpp
+        bigintutils.cpp
+)
+
+add_executable(Tests ${TEST_SOURCES})
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Somvertor

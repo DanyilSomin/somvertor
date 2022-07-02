@@ -93,7 +93,23 @@
        </widget>
       </item>
       <item row="0" column="6">
-       <widget class="QComboBox" name="comboBox"/>
+       <widget class="QComboBox" name="comboBox">
+        <item>
+         <property name="text">
+          <string>Plain</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>C++</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Space</string>
+         </property>
+        </item>
+       </widget>
       </item>
      </layout>
     </item>
