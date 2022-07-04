@@ -9,7 +9,10 @@ bool testStringDecMathChToInt();
 bool testStringDecMathDigitToChar();
 bool testStringDecMathAdd();
 bool testStringDecMathTwoToThePowerOf();
+bool testStringDecMathModTwo();
 bool testStringDecMathDivByUint();
+bool testStringDecMathToBoolVector();
+bool testStringDecMathFromBoolVector();
 
 // ------------------------------------------------------------------------
 
@@ -24,7 +27,10 @@ int main() {
     doTest(testStringDecMathDigitToChar, "testStringDecMathDigitToChar");
     doTest(testStringDecMathAdd, "testStringDecMathAdd");
     doTest(testStringDecMathTwoToThePowerOf, "testStringDecMathTwoToThePowerOf");
+    doTest(testStringDecMathModTwo, "testStringDecMathModTwo");
     doTest(testStringDecMathDivByUint, "testStringDecMathDivByUint");
+    doTest(testStringDecMathToBoolVector, "testStringDecMathToBoolVector");
+    doTest(testStringDecMathFromBoolVector, "testStringDecMathFromBoolVector");
 
     return 0;
 }
@@ -98,13 +104,13 @@ bool testStringDecMathTwoToThePowerOf() {
 
 // ------------------------------------------------------------------------
 
-bool testStringDecMathModTwo(const std::string &num) {
+bool testStringDecMathModTwo() {
     if (StringDecMath::modTwo("0") != 0) return false;
     if (StringDecMath::modTwo("1") != 1) return false;
     if (StringDecMath::modTwo("2") != 0) return false;
     if (StringDecMath::modTwo("3") != 1) return false;
     if (StringDecMath::modTwo("1001") != 1) return false;
-    if (StringDecMath::modTwo("1000") != 1) return false;
+    if (StringDecMath::modTwo("1000") != 0) return false;
 
     return true;
 }
@@ -119,6 +125,36 @@ bool testStringDecMathDivByUint() {
     if (StringDecMath::divByUint("0", 2) != "0") return false;
     if (StringDecMath::divByUint("4", 7) != "0") return false;
     if (StringDecMath::divByUint("37", 6) != "6") return false;
+
+    return true;
+}
+
+// ------------------------------------------------------------------------
+
+bool testStringDecMathToBoolVector() {
+    if (StringDecMath::toBoolVector("0") != std::vector<bool>{ }) return false;
+    if (StringDecMath::toBoolVector("1") != std::vector<bool>{ 1 }) return false;
+    if (StringDecMath::toBoolVector("2") != std::vector<bool>{ 1, 0 }) return false;
+    if (StringDecMath::toBoolVector("3") != std::vector<bool>{ 1, 1 }) return false;
+    if (StringDecMath::toBoolVector("4") != std::vector<bool>{ 1, 0, 0 }) return false;
+    if (StringDecMath::toBoolVector("8") != std::vector<bool>{ 1, 0, 0, 0 }) return false;
+    if (StringDecMath::toBoolVector("29") != std::vector<bool>{ 1, 1, 1, 0, 1 }) return false;
+    if (StringDecMath::toBoolVector("255") != std::vector<bool>{ 1, 1, 1, 1, 1, 1, 1, 1}) return false;
+
+    return true;
+}
+
+// ------------------------------------------------------------------------
+
+bool testStringDecMathFromBoolVector() {
+    if (StringDecMath::fromBoolVector({ }) != "0") return false;
+    if (StringDecMath::fromBoolVector({ 0 }) != "0") return false;
+    if (StringDecMath::fromBoolVector({ 1 }) != "1") return false;
+    if (StringDecMath::fromBoolVector({ 1, 0 }) != "2") return false;
+    if (StringDecMath::fromBoolVector({ 1, 1 }) != "3") return false;
+    if (StringDecMath::fromBoolVector({ 1, 1, 0 }) != "6") return false;
+    if (StringDecMath::fromBoolVector({ 1, 1, 1 }) != "7") return false;
+    if (StringDecMath::fromBoolVector({ 1, 1, 1, 1, 1, 1, 1, 1 }) != "255") return false;
 
     return true;
 }

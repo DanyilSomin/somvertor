@@ -3,6 +3,7 @@
 #include <string>
 #include <algorithm>
 #include <cassert>
+#include <vector>
 
 namespace StringDecMath {
     uint64_t chToInt(char ch) {
@@ -52,7 +53,7 @@ namespace StringDecMath {
     }
 
     uint64_t modTwo(const std::string &num) {
-        return chToInt(num.front()) % 2;
+        return chToInt(num.back()) % 2;
     }
 
     const std::string divByUint(const std::string &num, uint64_t divisor) {
@@ -80,6 +81,30 @@ namespace StringDecMath {
         }
 
         if (result.empty()) result.push_back('0');
+
+        return result;
+    }
+
+    const std::vector<bool> toBoolVector(const std::string &num) {
+        std::vector<bool> reversed;
+
+        auto remainder = num;
+
+        while (!remainder.empty() && remainder != "0") {
+            reversed.push_back(modTwo(remainder));
+            remainder = divByUint(remainder, 2);
+        }
+
+        return { reversed.rbegin(), reversed.rend() };
+    }
+
+    const std::string fromBoolVector(const std::vector<bool> &num) {
+        std::string result = "0";
+
+        for (size_t i = 0; i < num.size(); ++i) {
+            if (num[i])
+                result = add(result, twoToThePowerOf(num.size() - 1 - i));
+        }
 
         return result;
     }

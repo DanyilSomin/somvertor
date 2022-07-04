@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace StringDecMath {
     uint64_t chToInt(char ch);
@@ -14,4 +15,8 @@ namespace StringDecMath {
     uint64_t modTwo(const std::string &num);
 
     const std::string divByUint(const std::string &num, uint64_t divisor);
+
+    const std::vector<bool> toBoolVector(const std::string &num);
+
+    const std::string fromBoolVector(const std::vector<bool> &num);
 }
