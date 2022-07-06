@@ -1,7 +1,6 @@
 #include "bigintutils.h"
 
 #include <string>
-#include <algorithm>
 #include <cassert>
 #include <vector>
 

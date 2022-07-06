@@ -26,6 +26,8 @@ set(PROJECT_SOURCES
 set(TEST_SOURCES
         tests.h
         tests.cpp
+        dectests.h
+        dectests.cpp
         bigintutils.cpp
 )
 
