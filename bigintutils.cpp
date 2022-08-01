@@ -1,19 +1,63 @@
 #include "bigintutils.h"
 
-#include <string>
-#include <cassert>
-#include <vector>
+#include "error.h"
 
-namespace StringDecMath {
-    uint64_t chToInt(char ch) {
+namespace {
+
+    using namespace BigInt;
+
+    uint64_t maxDigitValue(BigInt::Digits d) {
+        switch (d) {
+        case BigInt::Digits::Bin:
+            return 1;
+        case BigInt::Digits::Dec:
+            return 9;
+        case BigInt::Digits::Hex:
+            return 15;
+        }
+
+        return false;
+    }
+
+    bool validateDigit(char ch, Digits d) {
+        switch (d) {
+        case Digits::Bin:
+            return ch == '0' || ch == '1';
+        case Digits::Dec:
+            return ch >= '0' && ch <= '9';
+        case Digits::Hex:
+            return (ch >= '0' && ch <= '9') ||
+                    (std::toupper(ch) >= 'A' && std::toupper(ch) <= 'F');
+        }
+
+        return false;
+    }
+
+    uint64_t chToInt(char ch, Digits d) {
+        if (!validateDigit(ch, d))
+            throw Error{ "chToInt: not digit passed." };
+
+        if ((std::toupper(ch) >= 'A' && std::toupper(ch) <= 'F'))
+            return 10 + ch - 'A';
+
         return ch - '0';
     }
 
-    char digitToChar(uint64_t digit) {
+    char digitToChar(uint64_t digit, Digits d) {
+        if (digit > maxDigitValue(d) || digit < 0)
+            throw Error{ "digitToChar: not digit passed." };
+
+        if (digit > 9)
+            return 'A' + digit - 10;
+
         return '0' + static_cast<char>(digit);
     }
 
-    const std::string add(const std::string &left, const std::string &right) {
+    const std::string add(const std::string &left, const std::string &right,
+                          Digits d) {
+        if (left.empty() || right.empty())
+            throw Error{ "add: empty string passed." };
+
         std::string result;
 
         uint64_t index = 0;
@@ -23,15 +67,15 @@ namespace StringDecMath {
             uint64_t sum = remainder;
 
             if (index < left.size())
-                sum += chToInt(left[left.size() - 1 - index]);
+                sum += chToInt(left[left.size() - 1 - index], d);
 
             if (index < right.size())
-                sum += chToInt(right[right.size() - 1 - index]);
+                sum += chToInt(right[right.size() - 1 - index], d);
 
-            remainder = sum / 10;
-            sum %= 10;
+            remainder = sum / (maxDigitValue(d) + 1);
+            sum %= (maxDigitValue(d) + 1);
 
-            result.push_back(digitToChar(sum));
+            result.push_back(digitToChar(sum, d));
 
             ++index;
         }
@@ -41,22 +85,29 @@ namespace StringDecMath {
         return result;
     }
 
-    const std::string twoToThePowerOf(uint64_t power) {
+    const std::string twoToThePowerOf(uint64_t power, Digits d) {
+        if (power < 0)
+            throw Error{ "twoToThePowerOf: negative power." };
+
         std::string result = "1";
 
-        for (uint64_t i = 0; i < power; ++i) {
-            result = add(result, result);
-        }
+        for (uint64_t i = 0; i < power; ++i)
+            result = add(result, result, d);
 
         return result;
     }
 
-    uint64_t modTwo(const std::string &num) {
-        return chToInt(num.back()) % 2;
+    uint64_t modTwo(const std::string &num, Digits d) {
+        if (num.empty())
+            throw Error{ "modTwo: empty string passed." };
+
+        return chToInt(num.back(), d) % 2;
     }
 
-    const std::string divByUint(const std::string &num, uint64_t divisor) {
-        assert(divisor != 0);
+    const std::string divByUint(const std::string &num, uint64_t divisor,
+                                Digits d) {
+        if (divisor == 0)
+            throw Error{ "divByUint: zero division." };
 
         std::string result;
 
@@ -67,12 +118,12 @@ namespace StringDecMath {
             remainder *= 10;
 
             if (index < num.size())
-                remainder += chToInt(num[index]);
+                remainder += chToInt(num[index], d);
 
             const uint64_t divisionResult = remainder / divisor;
 
             if (divisionResult || !result.empty())
-                result.push_back(digitToChar(divisionResult));
+                result.push_back(digitToChar(divisionResult, d));
 
             remainder %= divisor;
 
@@ -84,27 +135,32 @@ namespace StringDecMath {
         return result;
     }
 
-    const std::vector<bool> toBoolVector(const std::string &num) {
+}
+
+namespace BigInt {
+
+    const std::vector<bool> toBoolVector(const std::string &num, Digits d) {
         std::vector<bool> reversed;
 
         auto remainder = num;
 
         while (!remainder.empty() && remainder != "0") {
-            reversed.push_back(modTwo(remainder));
-            remainder = divByUint(remainder, 2);
+            reversed.push_back(modTwo(remainder, d));
+            remainder = divByUint(remainder, 2, d);
         }
 
         return { reversed.rbegin(), reversed.rend() };
     }
 
-    const std::string fromBoolVector(const std::vector<bool> &num) {
+    const std::string fromBoolVector(const std::vector<bool> &num, Digits d) {
         std::string result = "0";
 
         for (size_t i = 0; i < num.size(); ++i) {
             if (num[i])
-                result = add(result, twoToThePowerOf(num.size() - 1 - i));
+                result = add(result, twoToThePowerOf(num.size() - 1 - i, d), d);
         }
 
         return result;
     }
+
 }

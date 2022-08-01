@@ -21,13 +21,14 @@ set(PROJECT_SOURCES
         mainwindow.ui
         bigintutils.h
         bigintutils.cpp
+        error.h
+        error.cpp
 )
 
 set(TEST_SOURCES
-        tests.h
         tests.cpp
-        dectests.h
-        dectests.cpp
+        error.h
+        error.cpp
         bigintutils.cpp
 )
 

@@ -1,11 +1,10 @@
-#include "tests.h"
-
 #include <iostream>
 
-#include "dectests.h"
+#include "bigintutils.h"
 
-bool doTest(std::function<bool()> test, const char *name)
-{
+bool simple();
+
+bool doTest(std::function<bool()> test, const char *name) {
     bool ok = test();
     std::cout << name << " : " << (ok ? "PASSED" : "FAILED") << '\n';
 
@@ -15,11 +14,26 @@ bool doTest(std::function<bool()> test, const char *name)
 bool allTests() {
     bool ok = true;
 
-    ok &= doTest(decTests, "--- decTests");
+    ok &= doTest(simple, "--- simple");
 
     return ok;
 }
 
 int main() {
     doTest(allTests, "------- allTests");
+}
+
+// ------------------------------------------------------------------------
+
+bool simple() {
+    bool ok = true;
+
+    const auto vec = BigInt::toBoolVector("10", BigInt::Digits::Dec);
+    ok &= (vec == std::vector<bool>{ 1, 0, 1, 0 });
+
+    const auto num = BigInt::fromBoolVector(
+                std::vector<bool>{ 1, 0, 1, 0 }, BigInt::Digits::Dec);
+    ok &= (num == "10");
+
+    return ok;
 }
