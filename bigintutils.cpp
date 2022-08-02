@@ -1,5 +1,7 @@
 #include "bigintutils.h"
 
+#include <algorithm>
+
 #include "error.h"
 
 namespace {
@@ -115,7 +117,7 @@ namespace {
         uint64_t remainder = 0;
 
         while (index < num.size() || remainder >= divisor) {
-            remainder *= 10;
+            remainder *= maxDigitValue(d) + 1;
 
             if (index < num.size())
                 remainder += chToInt(num[index], d);
@@ -149,7 +151,8 @@ namespace BigInt {
             remainder = divByUint(remainder, 2, d);
         }
 
-        return { reversed.rbegin(), reversed.rend() };
+        return { std::find(reversed.rbegin(), reversed.rend(), true),
+                    reversed.rend() };
     }
 
     const std::string fromBoolVector(const std::vector<bool> &num, Digits d) {
