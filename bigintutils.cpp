@@ -39,7 +39,9 @@ namespace {
         if (!validateDigit(ch, d))
             throw Error{ "chToInt: not digit passed." };
 
-        if ((std::toupper(ch) >= 'A' && std::toupper(ch) <= 'F'))
+        ch = std::toupper(ch);
+
+        if ((ch >= 'A' && ch <= 'F'))
             return 10 + ch - 'A';
 
         return ch - '0';
