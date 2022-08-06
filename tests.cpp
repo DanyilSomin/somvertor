@@ -6,6 +6,8 @@ bool simple();
 bool zerosToBoolVector();
 bool zerosFromBoolVector();
 bool goodToBoolVectorTest();
+bool goodFromBoolVectorTests();
+bool badToBoolVectorTests();
 
 bool doTest(std::function<bool()> test, const char *name) {
     bool ok = test();
@@ -21,6 +23,8 @@ bool allTests() {
     ok &= doTest(zerosToBoolVector, "--- zerosToBoolVector");
     ok &= doTest(zerosFromBoolVector, "--- zerosFromBoolVector");
     ok &= doTest(goodToBoolVectorTest, "--- goodToBoolVectorTest");
+    ok &= doTest(goodFromBoolVectorTests, "--- goodFromBoolVectorTests");
+    ok &= doTest(badToBoolVectorTests, "--- badToBoolVectorTests");
 
     return ok;
 }
@@ -124,6 +128,114 @@ bool goodToBoolVectorTest() {
                                     0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0,
                                     1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1,
                                     1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1 };
+
+    return ok;
+}
+
+bool goodFromBoolVectorTests() {
+    bool ok = true;
+
+    auto num = BigInt::fromBoolVector(std::vector<bool>{ 1, 1, 1, 0, 1 },
+                                      BigInt::Digits::Bin);
+    ok = num == "11101";
+
+    num = BigInt::fromBoolVector(std::vector<bool>{ 1, 1, 1, 0, 1 },
+                                      BigInt::Digits::Dec);
+    ok = num == "29";
+
+    num = BigInt::fromBoolVector(std::vector<bool>{ 1, 1, 1, 0, 1 },
+                                      BigInt::Digits::Hex);
+    ok = num == "1D";
+
+    return ok;
+}
+
+bool badToBoolVectorTests() {
+    bool ok = true;
+
+    try {
+        const auto num = BigInt::toBoolVector("012", BigInt::Digits::Bin);
+        ok = false;
+    }
+    catch (...) {
+        ok &= true;
+    }
+
+    try {
+        const auto num = BigInt::toBoolVector("12A", BigInt::Digits::Dec);
+        ok = false;
+    }
+    catch (...) {
+        ok &= true;
+    }
+
+    try {
+        const auto num = BigInt::toBoolVector("0G", BigInt::Digits::Hex);
+        ok = false;
+    }
+    catch (...) {
+        ok &= true;
+    }
+
+    return ok;
+
+    try {
+        const auto num = BigInt::toBoolVector("-010", BigInt::Digits::Bin);
+        ok = false;
+    }
+    catch (...) {
+        ok &= true;
+    }
+
+    return ok;
+
+    try {
+        const auto num = BigInt::toBoolVector("-19", BigInt::Digits::Dec);
+        ok = false;
+    }
+    catch (...) {
+        ok &= true;
+    }
+
+    return ok;
+
+    try {
+        const auto num = BigInt::toBoolVector("-0A", BigInt::Digits::Hex);
+        ok = false;
+    }
+    catch (...) {
+        ok &= true;
+    }
+
+    return ok;
+
+    try {
+        const auto num = BigInt::toBoolVector("0000000", BigInt::Digits::Bin);
+        ok = false;
+    }
+    catch (...) {
+        ok &= true;
+    }
+
+    return ok;
+
+    try {
+        const auto num = BigInt::toBoolVector("99,5", BigInt::Digits::Dec);
+        ok = false;
+    }
+    catch (...) {
+        ok &= true;
+    }
+
+    return ok;
+
+    try {
+        const auto num = BigInt::toBoolVector("0Л", BigInt::Digits::Hex);
+        ok = false;
+    }
+    catch (...) {
+        ok &= true;
+    }
 
     return ok;
 }
