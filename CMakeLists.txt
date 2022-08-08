@@ -19,10 +19,14 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        bigintspinbox.h
+        bigintspinbox.cpp
         bigintutils.h
         bigintutils.cpp
         error.h
         error.cpp
+        formatrules.h
+        formatrules.cpp
 )
 
 set(TEST_SOURCES

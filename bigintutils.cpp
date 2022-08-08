@@ -8,19 +8,6 @@ namespace {
 
     using namespace BigInt;
 
-    uint64_t maxDigitValue(BigInt::Digits d) {
-        switch (d) {
-        case BigInt::Digits::Bin:
-            return 1;
-        case BigInt::Digits::Dec:
-            return 9;
-        case BigInt::Digits::Hex:
-            return 15;
-        }
-
-        return false;
-    }
-
     bool validateDigit(char ch, Digits d) {
         switch (d) {
         case Digits::Bin:
@@ -30,6 +17,19 @@ namespace {
         case Digits::Hex:
             return (ch >= '0' && ch <= '9') ||
                     (std::toupper(ch) >= 'A' && std::toupper(ch) <= 'F');
+        }
+
+        return false;
+    }
+
+    uint64_t maxDigitValue(BigInt::Digits d) {
+        switch (d) {
+        case BigInt::Digits::Bin:
+            return 1;
+        case BigInt::Digits::Dec:
+            return 9;
+        case BigInt::Digits::Hex:
+            return 15;
         }
 
         return false;
@@ -142,7 +142,6 @@ namespace {
 }
 
 namespace BigInt {
-
     const std::vector<bool> toBoolVector(const std::string &num, Digits d) {
         std::vector<bool> reversed;
 
