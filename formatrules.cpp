@@ -31,7 +31,7 @@ const QRegularExpression FormatRules::regex(Style s, BigInt::Digits d)
                 QStringLiteral("") :
                 QString("%1?").arg(separator(s));
 
-   const auto regexString = QString("(%1[%2](%3[%4]+)*)|%1%5")
+   const auto regexString = QString("(%1[%2](%3[%4]+)*)?|%1%5")
                            .arg(prefix(s, d),
                                 firstDigitRegex(d),
                                 separatorRegex,

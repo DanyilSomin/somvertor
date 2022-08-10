@@ -27,6 +27,8 @@ set(PROJECT_SOURCES
         error.cpp
         formatrules.h
         formatrules.cpp
+        movewidget.h
+        movewidget.cpp
 )
 
 set(TEST_SOURCES

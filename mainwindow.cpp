@@ -5,6 +5,8 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint);
+
     ui->setupUi(this);
 
     ui->binSpinBox->init(FormatRules::Style::Plain, BigInt::Digits::Bin);
