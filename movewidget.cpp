@@ -1,6 +1,7 @@
 #include "movewidget.h"
 
 #include <QMouseEvent>
+#include <QWindow>
 
 MoveWidget::MoveWidget(QWidget *parent)
     : QWidget{parent}
@@ -10,17 +11,16 @@ MoveWidget::MoveWidget(QWidget *parent)
 
 void MoveWidget::mousePressEvent(QMouseEvent *e)
 {
-    _startEventPos = e->position().toPoint();
-    _startWindowPos = parentWidget()->pos();
+    _pressPos = e->pos();
     _moving = true;
 }
 
 void MoveWidget::mouseMoveEvent(QMouseEvent *e)
 {
-    if (!_moving) return;
-
-    QPoint offset{ e->position().toPoint() - _startEventPos };
-    parentWidget()->move(_startWindowPos + offset);
+    if (_moving) {
+        QPoint diff = e->pos() - _pressPos;
+        window()->move(window()->pos() + diff);
+    }
 }
 
 void MoveWidget::mouseReleaseEvent(QMouseEvent *e)
