@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>483</width>
-    <height>59</height>
+    <height>51</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -35,31 +35,62 @@
    <double>1.000000000000000</double>
   </property>
   <widget class="MoveWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout">
     <property name="spacing">
-     <number>4</number>
+     <number>2</number>
     </property>
     <property name="leftMargin">
-     <number>5</number>
+     <number>3</number>
     </property>
     <property name="topMargin">
      <number>0</number>
     </property>
     <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
      <number>3</number>
     </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item>
-     <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0,0,0,0,0,0">
+     <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,16,0,0,10,0,0,0">
       <property name="topMargin">
        <number>0</number>
       </property>
+      <item row="1" column="1" colspan="6">
+       <widget class="BigIntSpinBox" name="binSpinBox" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="decLabel">
+        <property name="text">
+         <string>Dec:</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="5">
        <widget class="Line" name="line_2">
         <property name="orientation">
          <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="binLabel">
+        <property name="text">
+         <string>Bin:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="hexLabel">
+        <property name="text">
+         <string>Hex:</string>
         </property>
        </widget>
       </item>
@@ -82,33 +113,6 @@
         </item>
        </widget>
       </item>
-      <item row="2" column="1" colspan="6">
-       <widget class="BigIntSpinBox" name="binSpinBox" native="true">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="decLabel">
-        <property name="text">
-         <string>Dec:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="BigIntSpinBox" name="decSpinBox" native="true">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="2">
        <widget class="Line" name="line">
         <property name="sizePolicy">
@@ -122,27 +126,13 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="3">
-       <widget class="QLabel" name="hexLabel">
-        <property name="text">
-         <string>Hex:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="binLabel">
-        <property name="text">
-         <string>Bin:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="7" rowspan="3">
-       <widget class="QWidget" name="widget" native="true">
-        <property name="minimumSize">
-         <size>
-          <width>20</width>
-          <height>0</height>
-         </size>
+      <item row="0" column="1">
+       <widget class="BigIntSpinBox" name="decSpinBox" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
        </widget>
       </item>
@@ -156,10 +146,13 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="7">
-       <widget class="Line" name="line_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="0" column="7" rowspan="2">
+       <widget class="RightToolBar" name="widget" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>10</width>
+          <height>0</height>
+         </size>
         </property>
        </widget>
       </item>
@@ -179,6 +172,12 @@
    <class>MoveWidget</class>
    <extends>QWidget</extends>
    <header>movewidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>RightToolBar</class>
+   <extends>QWidget</extends>
+   <header>righttoolbar.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -5,7 +5,9 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint);
+    setWindowFlags(Qt::FramelessWindowHint
+                 | Qt::WindowSystemMenuHint
+                 | Qt::WindowStaysOnTopHint);
 
     ui->setupUi(this);
 

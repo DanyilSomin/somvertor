@@ -29,6 +29,9 @@ set(PROJECT_SOURCES
         formatrules.cpp
         movewidget.h
         movewidget.cpp
+        righttoolbar.h
+        righttoolbar.cpp
+        img.qrc
 )
 
 set(TEST_SOURCES

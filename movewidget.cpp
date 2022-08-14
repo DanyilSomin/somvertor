@@ -5,9 +5,7 @@
 
 MoveWidget::MoveWidget(QWidget *parent)
     : QWidget{parent}
-{
-
-}
+{ }
 
 void MoveWidget::mousePressEvent(QMouseEvent *e)
 {
