@@ -38,6 +38,8 @@ void PushIcon::paintEvent(QPaintEvent *e)
 {
     QPainter p{ this };
 
+    p.setRenderHint(QPainter::SmoothPixmapTransform,true);
+
     if (!_active)
         p.drawPixmap(rect(), _pixMap);
     else

@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <functional>
+
 #include "bigintutils.h"
 
 bool simple();
