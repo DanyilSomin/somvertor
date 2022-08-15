@@ -52,7 +52,7 @@
      <number>0</number>
     </property>
     <item>
-     <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,16,0,0,10,0,0,0">
+     <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,11,0,0,10,0,0,0">
       <property name="topMargin">
        <number>0</number>
       </property>
@@ -95,23 +95,7 @@
        </widget>
       </item>
       <item row="0" column="6">
-       <widget class="QComboBox" name="comboBox">
-        <item>
-         <property name="text">
-          <string>Plain</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>C++</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Space</string>
-         </property>
-        </item>
-       </widget>
+       <widget class="QComboBox" name="styleComboBox"/>
       </item>
       <item row="0" column="2">
        <widget class="Line" name="line">

@@ -15,5 +15,8 @@ public:
     ~MainWindow();
 
 private:
+    void initSpinBoxes();
+    void initStyleComboBox();
+
     Ui::MainWindow *ui;
 };

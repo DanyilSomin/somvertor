@@ -13,7 +13,17 @@ public:
 
     void init(FormatRules::Style s, BigInt::Digits d);
 
+    void setFormatStyle(FormatRules::Style s);
+
+    std::vector<bool> getBigInt() const;
+    void setBigInt(const std::vector<bool> &bigInt) const;
+
+signals:
+    void valueEdited(const std::vector<bool> &bigInt);
+
 private:
+    QString applyStyle(const QString &bigIntStr) const;
+
     BigInt::Digits _digits = BigInt::Digits::Bin;
     FormatRules::Style _formatStyle = FormatRules::Style::Plain;
 };
