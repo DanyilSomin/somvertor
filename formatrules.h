@@ -18,7 +18,7 @@ public:
 
     static const QString prefix(Style s, BigInt::Digits d);
     static const QString separator(Style s);
-    static const size_t groupPopulation(Style s, BigInt::Digits d);
+    static const size_t groupLength(Style s, BigInt::Digits d);
     static const QRegularExpression regex(Style s, BigInt::Digits d);
 
 private:

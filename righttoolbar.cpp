@@ -5,6 +5,13 @@
 #include <QApplication>
 #include <QBoxLayout>
 
+const int MinWindowSize = 300;
+const int ButtonSize = 9;
+const int WidthIconWidth = 7;
+
+const QColor WidthIcon::sColor{ 150, 150, 150, 120 };
+const QColor WidthIcon::sColorActive{ 150, 150, 150, 60 };
+
 RightToolBar::RightToolBar(QWidget *parent)
     : QWidget{parent}
 {
@@ -101,10 +108,12 @@ void WidthIcon::paintEvent(QPaintEvent *e)
 {
     QPainter p{ this };
 
+    const auto fillRect = rect().adjusted(2, 1, -2, -1);
+
     if (!_active)
-        p.fillRect(rect(), { { 150, 150, 150, 120 } });
+        p.fillRect(fillRect, { sColor });
     else
-        p.fillRect(rect(), { { 150, 150, 150, 60 } });
+        p.fillRect(fillRect, { sColorActive });
 
     return e->accept();
 }

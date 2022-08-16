@@ -2,10 +2,6 @@
 
 #include <QWidget>
 
-const int MinWindowSize = 300;
-const int ButtonSize = 9;
-const int WidthIconWidth = 3;
-
 class RightToolBar : public QWidget
 {
 public:
@@ -63,4 +59,7 @@ private:
 
     bool _moving{ false };
     bool _active{ false };
+
+    static const QColor sColor;
+    static const QColor sColorActive;
 };

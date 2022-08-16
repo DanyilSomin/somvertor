@@ -34,11 +34,11 @@ const QString FormatRules::separator(Style s)
     return QStringLiteral("");
 }
 
-const size_t FormatRules::groupPopulation(Style s, BigInt::Digits d)
+const size_t FormatRules::groupLength(Style s, BigInt::Digits d)
 {
     if ((s == Style::Cpp || s == Style::Space) && d == BigInt::Digits::Bin) return 4;
     if ((s == Style::Cpp || s == Style::Space) && d == BigInt::Digits::Dec) return 3;
-    if ((s == Style::Cpp || s == Style::Space) && d == BigInt::Digits::Hex) return 8;
+    if ((s == Style::Cpp || s == Style::Space) && d == BigInt::Digits::Hex) return 4;
 
     return 0;
 }
@@ -65,12 +65,3 @@ const QString FormatRules::charsetRegex(BigInt::Digits d)
     if (d == BigInt::Digits::Hex) return "0-9a-fA-F";
     return "\\d";
 }
-
-//const QString FormatRules::firstDigitRegex(BigInt::Digits d)
-//{
-//    if (d == BigInt::Digits::Bin) return "1";
-//    if (d == BigInt::Digits::Dec) return "1-9";
-//    if (d == BigInt::Digits::Hex) return "1-9a-fA-F";
-
-//    return "\\d";
-//}

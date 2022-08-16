@@ -1,26 +1,32 @@
 #include "bigintspinbox.h"
 
 #include <QLineEdit>
+#include <QTextStream>
 #include <QRegularExpression>
 
 BigIntSpinBox::BigIntSpinBox(QWidget *parent)
     : QAbstractSpinBox{ parent }
 {
-    connect(lineEdit(), &QLineEdit::textEdited, this, [this](const QString &text) {
-        const auto separator = FormatRules::separator(FormatRules::Style::Cpp);
+    connect(this, &QAbstractSpinBox::editingFinished, this,
+    [this]() {
+        const auto text = lineEdit()->text();
+        const auto separator = FormatRules::separator(_formatStyle);
 
         if (text.endsWith(separator)) {
             lineEdit()->setText(text.chopped(separator.size()));
         }
+
+        try {
+            setBigInt(getBigInt());
+        }
+        catch (...) { }
     });
 
     connect(lineEdit(), &QLineEdit::textEdited, this, [this]() {
         try {
             emit valueEdited(getBigInt());
         }
-        catch (...) {
-
-        }
+        catch (...) { }
     });
 }
 
@@ -34,7 +40,7 @@ void BigIntSpinBox::init(FormatRules::Style s, BigInt::Digits d)
                                                     _digits),
                              this));
 
-    lineEdit()->clear();
+    setBigInt({});
 }
 
 void BigIntSpinBox::setFormatStyle(FormatRules::Style s)
@@ -64,14 +70,23 @@ std::vector<bool> BigIntSpinBox::getBigInt() const
 void BigIntSpinBox::setBigInt(const std::vector<bool> &bigInt) const
 {
     lineEdit()->setText(applyStyle(QString::fromStdString(
-                                       BigInt::fromBoolVector(bigInt, _digits))));
+                            BigInt::fromBoolVector(bigInt, _digits))));
 }
 
 QString BigIntSpinBox::applyStyle(const QString &bigIntStr) const
 {
-    QString result = bigIntStr;
+    QString result;
+    result.append(FormatRules::prefix(_formatStyle, _digits));
 
-    result.push_front(FormatRules::prefix(_formatStyle, _digits));
+    const auto numLen = bigIntStr.length();
+    const auto groupLen = FormatRules::groupLength(_formatStyle, _digits);
+    const auto separator = FormatRules::separator(_formatStyle);
+    for (int i = 0; i < numLen; ++i) {
+        if (i && !((numLen - i) % groupLen))
+            result.append(separator);
+
+        result.append(bigIntStr[i]);
+    }
 
     return result;
 }
