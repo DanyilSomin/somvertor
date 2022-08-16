@@ -23,7 +23,6 @@ public:
 
 private:
     static const QString charsetRegex(BigInt::Digits d);
-    static const QString firstDigitRegex(BigInt::Digits d);
 };
 
 Q_DECLARE_METATYPE(FormatRules::Style)
