@@ -133,11 +133,23 @@ void WidthIcon::mouseDoubleClickEvent(QMouseEvent *e)
     QRect screenGeometry = QApplication::screenAt(
         mapToGlobal(e->pos()))->geometry();
 
-    window()->setFixedWidth(screenGeometry.width());
-    window()->setGeometry({ screenGeometry.left(),
-                            windowGeometry.top(),
-                            screenGeometry.width(),
-                            windowGeometry.height()});
+    // double click while maximized
+    if (windowGeometry.width() == screenGeometry.width()
+     && windowGeometry.left() == screenGeometry.left()) {
+        window()->setFixedWidth(_lastDoubleClickGeometry.width());
+        window()->setGeometry({ _lastDoubleClickGeometry.left(),
+                                windowGeometry.top(),
+                                _lastDoubleClickGeometry.width(),
+                                _lastDoubleClickGeometry.height()});
+    }
+    else { // normal double click
+        _lastDoubleClickGeometry = windowGeometry;
+        window()->setFixedWidth(screenGeometry.width());
+        window()->setGeometry({ screenGeometry.left(),
+                                windowGeometry.top(),
+                                screenGeometry.width(),
+                                windowGeometry.height()});
+    }
 
     return e->accept();
 }

@@ -54,6 +54,8 @@ public:
     virtual void leaveEvent(QEvent *e) override;
 
 private:
+    QRect _lastDoubleClickGeometry{};
+
     QRect _startGeometry{ };
     QPoint _startPos{ };
 
