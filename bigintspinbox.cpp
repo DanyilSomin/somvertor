@@ -28,6 +28,8 @@ BigIntSpinBox::BigIntSpinBox(QWidget *parent)
         }
         catch (...) { }
     });
+
+    _stepEnabled.setFlag(StepUpEnabled, true);
 }
 
 void BigIntSpinBox::init(FormatRules::Style s, BigInt::Digits d)
@@ -69,8 +71,27 @@ std::vector<bool> BigIntSpinBox::getBigInt() const
 
 void BigIntSpinBox::setBigInt(const std::vector<bool> &bigInt) const
 {
-    lineEdit()->setText(applyStyle(QString::fromStdString(
-                            BigInt::fromBoolVector(bigInt, _digits))));
+    const auto bigIntStr = BigInt::fromBoolVector(bigInt, _digits);
+
+    if (bigIntStr == "0")
+        _stepEnabled.setFlag(StepDownEnabled, false);
+    else
+        _stepEnabled.setFlag(StepDownEnabled, true);
+
+    lineEdit()->setText(applyStyle(
+                            QString::fromStdString(bigIntStr)));
+}
+
+QAbstractSpinBox::StepEnabled BigIntSpinBox::stepEnabled() const
+{
+    return _stepEnabled;
+}
+
+#include <QDebug>
+void BigIntSpinBox::stepBy(int step)
+{
+
+    qDebug() << "stepBy() : " << step;
 }
 
 QString BigIntSpinBox::applyStyle(const QString &bigIntStr) const

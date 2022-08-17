@@ -18,12 +18,17 @@ public:
     std::vector<bool> getBigInt() const;
     void setBigInt(const std::vector<bool> &bigInt) const;
 
+    StepEnabled stepEnabled() const override;
+    void stepBy(int step) override;
+
 signals:
     void valueEdited(const std::vector<bool> &bigInt);
 
 private:
     QString applyStyle(const QString &bigIntStr) const;
 
-    BigInt::Digits _digits = BigInt::Digits::Bin;
-    FormatRules::Style _formatStyle = FormatRules::Style::Plain;
+    BigInt::Digits _digits{ BigInt::Digits::Bin };
+    FormatRules::Style _formatStyle{ FormatRules::Style::Plain };
+
+    mutable StepEnabled _stepEnabled{ };
 };
