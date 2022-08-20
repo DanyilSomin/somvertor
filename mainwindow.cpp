@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
-#include <QDebug>
+#include <QShortcut>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,11 +15,52 @@ MainWindow::MainWindow(QWidget *parent)
 
     initSpinBoxes();
     initStyleComboBox();
+    initHokeys();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::updateStyle(int index)
+{
+    const auto style = ui->styleComboBox->currentData()
+            .value<FormatRules::Style>();
+
+    ui->binSpinBox->setFormatStyle(style);
+    ui->decSpinBox->setFormatStyle(style);
+    ui->hexSpinBox->setFormatStyle(style);
+}
+
+void MainWindow::increment()
+{
+    const auto currentNum = ui->binSpinBox->getBigInt();
+    const auto incremented = BigInt::incremented(currentNum);
+
+    const auto applyIncrement = [&](auto *sb) {
+        sb->setBigInt(incremented);
+        sb->update();
+    };
+
+    applyIncrement(ui->binSpinBox);
+    applyIncrement(ui->decSpinBox);
+    applyIncrement(ui->hexSpinBox);
+}
+
+void MainWindow::decrement()
+{
+    const auto currentNum = ui->binSpinBox->getBigInt();
+    const auto decremented = BigInt::decremented(currentNum);
+
+    const auto applyDecrement = [&](auto *sb) {
+        sb->setBigInt(decremented);
+        sb->update();
+    };
+
+    applyDecrement(ui->binSpinBox);
+    applyDecrement(ui->decSpinBox);
+    applyDecrement(ui->hexSpinBox);
 }
 
 void MainWindow::initSpinBoxes()
@@ -38,6 +79,11 @@ void MainWindow::initSpinBoxes()
             if (sb != ui->hexSpinBox)
                 ui->hexSpinBox->setBigInt(bigInt);
         });
+
+        connect(sb, &BigIntSpinBox::incrementPressed,
+                this, &MainWindow::increment);
+        connect(sb, &BigIntSpinBox::decrementPressed,
+                this, &MainWindow::decrement);
     };
 
     connectSpinBox(ui->binSpinBox);
@@ -53,14 +99,21 @@ void MainWindow::initStyleComboBox()
                     QVariant::fromValue(style));
     }
 
-    connect(ui->styleComboBox, &QComboBox::currentIndexChanged, this,
-            [&](int index) {
-                const auto style = ui->styleComboBox->currentData()
-                        .value<FormatRules::Style>();
+    connect(ui->styleComboBox, &QComboBox::currentIndexChanged,
+            this, &MainWindow::updateStyle);
 
-                ui->binSpinBox->setFormatStyle(style);
-                ui->decSpinBox->setFormatStyle(style);
-                ui->hexSpinBox->setFormatStyle(style);
-            });
+}
+
+void MainWindow::initHokeys()
+{
+    connect(new QShortcut(QKeySequence("ctrl+s"), this), &QShortcut::activated, this,
+        [&]() {
+            auto *combo = ui->styleComboBox;
+            const auto count = combo->count();
+            const auto currentIndex = combo->currentIndex();
+            const auto nextIndex = (combo->currentIndex() + 1) % combo->count();
+
+            ui->styleComboBox->setCurrentIndex(nextIndex);
+        });
 }
 

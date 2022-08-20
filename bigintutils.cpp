@@ -167,4 +167,41 @@ namespace BigInt {
         return result;
     }
 
+    const std::vector<bool> incremented(const std::vector<bool> &num) {
+        std::vector<bool> reversed;
+
+        size_t i = 0;
+        bool takeOver = true;
+        while (true) {
+            const auto bit = num[num.size() - i - 1];
+
+            if (i < num.size()) {
+                reversed.push_back(takeOver ^ bit);
+                takeOver &= bit;
+            }
+            else if (takeOver) {
+                reversed.push_back(takeOver);
+                takeOver = false;
+            }
+
+            ++i;
+
+            if (!takeOver && !(i < num.size()))
+                break;
+        }
+
+        return { reversed.rbegin(), reversed.rend() };
+    }
+
+    const std::vector<bool> decremented(const std::vector<bool> &num) {
+        std::vector<bool> reversed;
+
+        bool takeOver = true;
+        for (auto bitIt = num.crbegin(); bitIt < num.crend(); ++bitIt) {
+            reversed.push_back(takeOver ^ *bitIt);
+            takeOver &= !*bitIt;
+        }
+
+        return { reversed.rbegin(), reversed.rend() };
+    }
 }

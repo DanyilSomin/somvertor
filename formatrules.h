@@ -9,11 +9,13 @@ class FormatRules
 public:
     enum class Style {
         Plain,
+        Space,
+        Prefix,
+        Programmer,
         Cpp,
-        Space
     };
 
-    static const std::array<Style, 3> styles;
+    static const std::array<Style, 5> styles;
     static const QString styleName(Style style);
 
     static const QString prefix(Style s, BigInt::Digits d);

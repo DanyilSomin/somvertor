@@ -14,9 +14,15 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void updateStyle(int index);
+    void increment();
+    void decrement();
+
 private:
     void initSpinBoxes();
     void initStyleComboBox();
+    void initHokeys();
 
     Ui::MainWindow *ui;
 };

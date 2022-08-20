@@ -23,6 +23,8 @@ public:
 
 signals:
     void valueEdited(const std::vector<bool> &bigInt);
+    void incrementPressed();
+    void decrementPressed();
 
 private:
     QString applyStyle(const QString &bigIntStr) const;

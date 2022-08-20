@@ -89,9 +89,8 @@ QAbstractSpinBox::StepEnabled BigIntSpinBox::stepEnabled() const
 
 void BigIntSpinBox::stepBy(int step)
 {
-    if () {
-
-    }
+    if (step == 1) emit incrementPressed();
+    if (step == -1) emit decrementPressed();
 }
 
 QString BigIntSpinBox::applyStyle(const QString &bigIntStr) const
