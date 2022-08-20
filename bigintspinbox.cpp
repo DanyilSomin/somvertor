@@ -87,11 +87,11 @@ QAbstractSpinBox::StepEnabled BigIntSpinBox::stepEnabled() const
     return _stepEnabled;
 }
 
-#include <QDebug>
 void BigIntSpinBox::stepBy(int step)
 {
+    if () {
 
-    qDebug() << "stepBy() : " << step;
+    }
 }
 
 QString BigIntSpinBox::applyStyle(const QString &bigIntStr) const
@@ -103,7 +103,7 @@ QString BigIntSpinBox::applyStyle(const QString &bigIntStr) const
     const auto groupLen = FormatRules::groupLength(_formatStyle, _digits);
     const auto separator = FormatRules::separator(_formatStyle);
     for (int i = 0; i < numLen; ++i) {
-        if (i && !((numLen - i) % groupLen))
+        if (groupLen && i && !((numLen - i) % groupLen))
             result.append(separator);
 
         result.append(bigIntStr[i]);
