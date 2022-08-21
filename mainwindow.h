@@ -18,11 +18,12 @@ private slots:
     void updateStyle(int index);
     void increment();
     void decrement();
+    void switchStyle();
 
 private:
     void initSpinBoxes();
     void initStyleComboBox();
-    void initHokeys();
+    void initShortcuts();
 
     Ui::MainWindow *ui;
 };

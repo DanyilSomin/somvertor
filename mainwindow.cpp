@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     initSpinBoxes();
     initStyleComboBox();
-    initHokeys();
+    initShortcuts();
 }
 
 MainWindow::~MainWindow()
@@ -63,6 +63,16 @@ void MainWindow::decrement()
     applyDecrement(ui->hexSpinBox);
 }
 
+void MainWindow::switchStyle()
+{
+    auto *combo = ui->styleComboBox;
+    const auto count = combo->count();
+    const auto currentIndex = combo->currentIndex();
+    const auto nextIndex = (combo->currentIndex() + 1) % combo->count();
+
+    ui->styleComboBox->setCurrentIndex(nextIndex);
+}
+
 void MainWindow::initSpinBoxes()
 {
     ui->binSpinBox->init(FormatRules::Style::Plain, BigInt::Digits::Bin);
@@ -104,16 +114,11 @@ void MainWindow::initStyleComboBox()
 
 }
 
-void MainWindow::initHokeys()
+void MainWindow::initShortcuts()
 {
-    connect(new QShortcut(QKeySequence("ctrl+s"), this), &QShortcut::activated, this,
-        [&]() {
-            auto *combo = ui->styleComboBox;
-            const auto count = combo->count();
-            const auto currentIndex = combo->currentIndex();
-            const auto nextIndex = (combo->currentIndex() + 1) % combo->count();
-
-            ui->styleComboBox->setCurrentIndex(nextIndex);
-        });
+    connect(new QShortcut(QKeySequence("Ctrl+s"), this), &QShortcut::activated,
+            this, &MainWindow::switchStyle);
+    connect(new QShortcut(QKeySequence("Ctrl+і"), this), &QShortcut::activated,
+            this, &MainWindow::switchStyle);
 }
 
