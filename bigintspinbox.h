@@ -26,6 +26,10 @@ signals:
     void incrementPressed();
     void decrementPressed();
 
+private slots:
+    void onEditingFinished();
+    void onTextEdited(const QString &);
+
 private:
     QString applyStyle(const QString &bigIntStr) const;
 

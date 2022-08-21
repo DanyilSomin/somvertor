@@ -7,27 +7,11 @@
 BigIntSpinBox::BigIntSpinBox(QWidget *parent)
     : QAbstractSpinBox{ parent }
 {
-    connect(this, &QAbstractSpinBox::editingFinished, this,
-    [this]() {
-        const auto text = lineEdit()->text();
-        const auto separator = FormatRules::separator(_formatStyle);
+    connect(this, &QAbstractSpinBox::editingFinished,
+            this, &BigIntSpinBox::onEditingFinished);
 
-        if (text.endsWith(separator)) {
-            lineEdit()->setText(text.chopped(separator.size()));
-        }
-
-        try {
-            setBigInt(getBigInt());
-        }
-        catch (...) { }
-    });
-
-    connect(lineEdit(), &QLineEdit::textEdited, this, [this]() {
-        try {
-            emit valueEdited(getBigInt());
-        }
-        catch (...) { }
-    });
+    connect(lineEdit(), &QLineEdit::textEdited,
+            this, &BigIntSpinBox::onTextEdited);
 
     _stepEnabled.setFlag(StepUpEnabled, true);
 }
@@ -91,6 +75,40 @@ void BigIntSpinBox::stepBy(int step)
 {
     if (step == 1) emit incrementPressed();
     if (step == -1) emit decrementPressed();
+}
+
+void BigIntSpinBox::onEditingFinished()
+{
+    const auto text = lineEdit()->text();
+    const auto separator = FormatRules::separator(_formatStyle);
+
+    if (text.endsWith(separator)) {
+        lineEdit()->setText(text.chopped(separator.size()));
+    }
+
+    try {
+        setBigInt(getBigInt());
+    }
+    catch (...) { }
+}
+
+void BigIntSpinBox::onTextEdited(const QString &text)
+{
+    try {
+        emit valueEdited(getBigInt());
+
+        const auto prefix = FormatRules::prefix(_formatStyle, _digits);
+
+        const bool firstDigitWasZero = (text.size() == prefix.size() + 2)
+                                   && text.startsWith(prefix + "0");
+        const bool cursorAtTheEnd = lineEdit()->cursorPosition() == text.size();
+
+        if (firstDigitWasZero && cursorAtTheEnd) {
+            const auto withoutLeadingZero = prefix + text.back();
+            lineEdit()->setText(withoutLeadingZero);
+        }
+    }
+    catch (...) { }
 }
 
 QString BigIntSpinBox::applyStyle(const QString &bigIntStr) const
