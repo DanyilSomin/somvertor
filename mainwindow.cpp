@@ -111,7 +111,6 @@ void MainWindow::initStyleComboBox()
 
     connect(ui->styleComboBox, &QComboBox::currentIndexChanged,
             this, &MainWindow::updateStyle);
-
 }
 
 void MainWindow::initShortcuts()
