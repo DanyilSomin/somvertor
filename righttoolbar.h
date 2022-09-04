@@ -2,6 +2,8 @@
 
 #include <QWidget>
 
+#include "mainwindow.h"
+
 class RightToolBar : public QWidget
 {
 public:
@@ -39,6 +41,15 @@ class MinimizePushIcon : public PushIcon {
 public:
     explicit MinimizePushIcon(QWidget *parent);
     virtual void mousePressEvent(QMouseEvent *e) override;
+};
+
+class SettingsPushIcon : public PushIcon {
+public:
+    explicit SettingsPushIcon(MainWindow *mainWindow, QWidget *parent);
+    virtual void mousePressEvent(QMouseEvent *e) override;
+
+private:
+    MainWindow *_mainWindow;
 };
 
 class WidthIcon : public QWidget

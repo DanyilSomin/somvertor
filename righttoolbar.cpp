@@ -5,6 +5,8 @@
 #include <QApplication>
 #include <QBoxLayout>
 
+#include "settingsdialog.h"
+
 const int MinWindowSize = 300;
 const int ButtonSize = 9;
 const int WidthIconWidth = 7;
@@ -25,6 +27,10 @@ RightToolBar::RightToolBar(QWidget *parent)
 
     layout()->addWidget(new ClosePushIcon{ this });
     layout()->addWidget(new MinimizePushIcon{ this });
+    layout()->addWidget(new SettingsPushIcon{
+                            dynamic_cast<MainWindow *>(window()),
+                            this });
+
     layout()->addWidget(widthIcon);
 
     layout()->setAlignment(widthIcon, Qt::AlignHCenter);
@@ -183,4 +189,19 @@ void WidthIcon::leaveEvent(QEvent *e)
     update();
 
     return e->accept();
+}
+
+SettingsPushIcon::SettingsPushIcon(MainWindow *mainWindow, QWidget *parent)
+    : PushIcon{ QStringLiteral(":/img/settings.png"),
+                QStringLiteral(":/img/settings_active.png"),
+                parent },
+      _mainWindow{ mainWindow }
+{ }
+
+void SettingsPushIcon::mousePressEvent(QMouseEvent *e)
+{
+    SettingsDialog sd{ _mainWindow->windowOpacity(), this };
+    connect(&sd, &SettingsDialog::opacityChanged,
+            _mainWindow, &MainWindow::onOpacityChanged);
+    sd.exec();
 }

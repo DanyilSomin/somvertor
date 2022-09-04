@@ -3,6 +3,8 @@
 
 #include <QShortcut>
 
+const QString MainWindow::propOpacity = QStringLiteral("opacity");
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -16,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     initSpinBoxes();
     initStyleComboBox();
     initShortcuts();
+    initSettings();
 }
 
 MainWindow::~MainWindow()
@@ -68,9 +71,16 @@ void MainWindow::switchStyle()
     auto *combo = ui->styleComboBox;
     const auto count = combo->count();
     const auto currentIndex = combo->currentIndex();
-    const auto nextIndex = (combo->currentIndex() + 1) % combo->count();
+    const auto nextIndex = (currentIndex + 1) % count;
 
     ui->styleComboBox->setCurrentIndex(nextIndex);
+}
+
+void MainWindow::onOpacityChanged(int opacity)
+{
+    const qreal newOpacity = opacity / 100.0;
+    _settings.setValue(propOpacity, newOpacity);
+    setWindowOpacity(newOpacity);
 }
 
 void MainWindow::initSpinBoxes()
@@ -119,5 +129,10 @@ void MainWindow::initShortcuts()
             this, &MainWindow::switchStyle);
     connect(new QShortcut(QKeySequence("Ctrl+і"), this), &QShortcut::activated,
             this, &MainWindow::switchStyle);
+}
+
+void MainWindow::initSettings()
+{
+    setWindowOpacity(_settings.value(propOpacity, 0.5).toReal());
 }
 

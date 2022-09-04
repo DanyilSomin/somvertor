@@ -4,5 +4,7 @@
         <file>img/close_active.png</file>
         <file>img/minimize_active.png</file>
         <file>img/minimize.png</file>
+        <file>img/settings.png</file>
+        <file>img/settings_active.png</file>
     </qresource>
 </RCC>

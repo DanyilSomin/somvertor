@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QMainWindow>
+#include <QSettings>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -14,6 +15,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+    void onOpacityChanged(int opacity);
+
 private slots:
     void updateStyle(int index);
     void increment();
@@ -24,6 +28,11 @@ private:
     void initSpinBoxes();
     void initStyleComboBox();
     void initShortcuts();
+    void initSettings();
+
+    QSettings _settings;
 
     Ui::MainWindow *ui;
+
+    static const QString propOpacity;
 };
