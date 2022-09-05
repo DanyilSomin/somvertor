@@ -12,8 +12,6 @@ BigIntSpinBox::BigIntSpinBox(QWidget *parent)
 
     connect(lineEdit(), &QLineEdit::textEdited,
             this, &BigIntSpinBox::onTextEdited);
-
-    _stepEnabled.setFlag(StepUpEnabled, true);
 }
 
 void BigIntSpinBox::init(FormatRules::Style s, BigInt::Digits d)
@@ -57,18 +55,18 @@ void BigIntSpinBox::setBigInt(const std::vector<bool> &bigInt) const
 {
     const auto bigIntStr = BigInt::fromBoolVector(bigInt, _digits);
 
-    if (bigIntStr == "0")
-        _stepEnabled.setFlag(StepDownEnabled, false);
-    else
-        _stepEnabled.setFlag(StepDownEnabled, true);
-
     lineEdit()->setText(applyStyle(
                             QString::fromStdString(bigIntStr)));
 }
 
 QAbstractSpinBox::StepEnabled BigIntSpinBox::stepEnabled() const
 {
-    return _stepEnabled;
+    QAbstractSpinBox::StepEnabled se;
+
+    se.setFlag(StepDownEnabled, getBigInt().size());
+    se.setFlag(StepUpEnabled, true);
+
+    return se;
 }
 
 void BigIntSpinBox::stepBy(int step)
@@ -98,17 +96,20 @@ void BigIntSpinBox::onTextEdited(const QString &text)
         emit valueEdited(getBigInt());
 
         const auto prefix = FormatRules::prefix(_formatStyle, _digits);
+        const auto separator = FormatRules::separator(_formatStyle);
 
         const bool firstDigitWasZero = (text.size() == prefix.size() + 2)
                                    && text.startsWith(prefix + "0");
         const bool cursorAtTheEnd = lineEdit()->cursorPosition() == text.size();
 
-        if (firstDigitWasZero && cursorAtTheEnd) {
+        if (firstDigitWasZero && cursorAtTheEnd && text.back() != separator) {
             const auto withoutLeadingZero = prefix + text.back();
             lineEdit()->setText(withoutLeadingZero);
         }
     }
     catch (...) { }
+
+    update();
 }
 
 QString BigIntSpinBox::applyStyle(const QString &bigIntStr) const
@@ -127,4 +128,14 @@ QString BigIntSpinBox::applyStyle(const QString &bigIntStr) const
     }
 
     return result;
+}
+
+std::string BigIntSpinBox::bigIntStr() const
+{
+    auto bigIntStr = lineEdit()->text();
+
+    bigIntStr.remove(FormatRules::prefix(_formatStyle, _digits));
+    bigIntStr.remove(FormatRules::separator(_formatStyle));
+
+    return bigIntStr.toStdString();
 }

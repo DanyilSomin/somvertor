@@ -32,9 +32,8 @@ private slots:
 
 private:
     QString applyStyle(const QString &bigIntStr) const;
+    std::string bigIntStr() const;
 
     BigInt::Digits _digits{ BigInt::Digits::Bin };
     FormatRules::Style _formatStyle{ FormatRules::Style::Plain };
-
-    mutable StepEnabled _stepEnabled{ };
 };

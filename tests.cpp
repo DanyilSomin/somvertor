@@ -139,15 +139,15 @@ bool goodFromBoolVectorTests() {
 
     auto num = BigInt::fromBoolVector(std::vector<bool>{ 1, 1, 1, 0, 1 },
                                       BigInt::Digits::Bin);
-    ok = num == "11101";
+    ok &= num == "11101";
 
     num = BigInt::fromBoolVector(std::vector<bool>{ 1, 1, 1, 0, 1 },
                                       BigInt::Digits::Dec);
-    ok = num == "29";
+    ok &= num == "29";
 
     num = BigInt::fromBoolVector(std::vector<bool>{ 1, 1, 1, 0, 1 },
                                       BigInt::Digits::Hex);
-    ok = num == "1D";
+    ok &= num == "1D";
 
     return ok;
 }
