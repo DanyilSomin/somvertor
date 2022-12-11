@@ -5,13 +5,9 @@
 
 const QString MainWindow::propOpacity = QStringLiteral("opacity");
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
-    setWindowFlags(Qt::FramelessWindowHint
-                 | Qt::WindowSystemMenuHint
-                 | Qt::WindowStaysOnTopHint);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint);
 
     ui->setupUi(this);
 
@@ -24,12 +20,12 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    _settings.sync();
 }
 
 void MainWindow::updateStyle(int index)
 {
-    const auto style = ui->styleComboBox->currentData()
-            .value<FormatRules::Style>();
+    const auto style = ui->styleComboBox->currentData().value<FormatRules::Style>();
 
     ui->binSpinBox->setFormatStyle(style);
     ui->decSpinBox->setFormatStyle(style);
@@ -90,8 +86,7 @@ void MainWindow::initSpinBoxes()
     ui->hexSpinBox->init(FormatRules::Style::Plain, BigInt::Digits::Hex);
 
     auto connectSpinBox = [&](BigIntSpinBox *sb) {
-        connect(sb, &BigIntSpinBox::valueEdited, this,
-        [&, sb](const auto &bigInt) {
+        connect(sb, &BigIntSpinBox::valueEdited, this, [&, sb](const auto &bigInt) {
             if (sb != ui->binSpinBox)
                 ui->binSpinBox->setBigInt(bigInt);
             if (sb != ui->decSpinBox)
@@ -100,10 +95,8 @@ void MainWindow::initSpinBoxes()
                 ui->hexSpinBox->setBigInt(bigInt);
         });
 
-        connect(sb, &BigIntSpinBox::incrementPressed,
-                this, &MainWindow::increment);
-        connect(sb, &BigIntSpinBox::decrementPressed,
-                this, &MainWindow::decrement);
+        connect(sb, &BigIntSpinBox::incrementPressed, this, &MainWindow::increment);
+        connect(sb, &BigIntSpinBox::decrementPressed, this, &MainWindow::decrement);
     };
 
     connectSpinBox(ui->binSpinBox);
@@ -113,26 +106,20 @@ void MainWindow::initSpinBoxes()
 
 void MainWindow::initStyleComboBox()
 {
-    for (const auto style : FormatRules::styles) {
-        ui->styleComboBox->addItem(
-                    FormatRules::styleName(style),
-                    QVariant::fromValue(style));
+    for (const auto style : FormatRules::styles)
+    {
+        ui->styleComboBox->addItem(FormatRules::styleName(style), QVariant::fromValue(style));
     }
 
-    connect(ui->styleComboBox, &QComboBox::currentIndexChanged,
-            this, &MainWindow::updateStyle);
+    connect(ui->styleComboBox, &QComboBox::currentIndexChanged, this, &MainWindow::updateStyle);
 }
 
 void MainWindow::initShortcuts()
 {
-    connect(new QShortcut(QKeySequence("Ctrl+s"), this), &QShortcut::activated,
-            this, &MainWindow::switchStyle);
-    connect(new QShortcut(QKeySequence("Ctrl+і"), this), &QShortcut::activated,
-            this, &MainWindow::switchStyle);
+    connect(new QShortcut(QKeySequence("Ctrl+s"), this), &QShortcut::activated, this,
+            &MainWindow::switchStyle);
+    connect(new QShortcut(QKeySequence("Ctrl+і"), this), &QShortcut::activated, this,
+            &MainWindow::switchStyle);
 }
 
-void MainWindow::initSettings()
-{
-    setWindowOpacity(_settings.value(propOpacity, 0.5).toReal());
-}
-
+void MainWindow::initSettings() { setWindowOpacity(_settings.value(propOpacity, 0.5).toReal()); }
