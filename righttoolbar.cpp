@@ -1,11 +1,9 @@
 #include "righttoolbar.h"
 
-#include <QPainter>
-#include <QMouseEvent>
 #include <QApplication>
 #include <QBoxLayout>
-
-#include "settingsdialog.h"
+#include <QMouseEvent>
+#include <QPainter>
 
 const int MinWindowSize = 300;
 const int ButtonSize = 9;
@@ -14,8 +12,7 @@ const int WidthIconWidth = 7;
 const QColor WidthIcon::sColor{ 150, 150, 150, 120 };
 const QColor WidthIcon::sColorActive{ 150, 150, 150, 60 };
 
-RightToolBar::RightToolBar(QWidget *parent)
-    : QWidget{parent}
+RightToolBar::RightToolBar(QWidget *parent) : QWidget{ parent }
 {
     setLayout(new QVBoxLayout{ this });
 
@@ -27,21 +24,14 @@ RightToolBar::RightToolBar(QWidget *parent)
 
     layout()->addWidget(new ClosePushIcon{ this });
     layout()->addWidget(new MinimizePushIcon{ this });
-    layout()->addWidget(new SettingsPushIcon{
-                            dynamic_cast<MainWindow *>(window()),
-                            this });
 
     layout()->addWidget(widthIcon);
 
     layout()->setAlignment(widthIcon, Qt::AlignHCenter);
 }
 
-PushIcon::PushIcon(const QString &pixMap,
-                   const QString &activePixMap,
-                   QWidget *parent)
-     : QWidget{ parent },
-    _pixMap{ pixMap },
-    _activePixMap{ activePixMap }
+PushIcon::PushIcon(const QString &pixMap, const QString &activePixMap, QWidget *parent)
+    : QWidget{ parent }, _pixMap{ pixMap }, _activePixMap{ activePixMap }
 {
     setFixedSize({ ButtonSize, ButtonSize });
     setMouseTracking(true);
@@ -51,7 +41,7 @@ void PushIcon::paintEvent(QPaintEvent *e)
 {
     QPainter p{ this };
 
-    p.setRenderHint(QPainter::SmoothPixmapTransform,true);
+    p.setRenderHint(QPainter::SmoothPixmapTransform, true);
 
     if (!_active)
         p.drawPixmap(rect(), _pixMap);
@@ -78,10 +68,10 @@ void PushIcon::leaveEvent(QEvent *e)
 }
 
 ClosePushIcon::ClosePushIcon(QWidget *parent)
-    : PushIcon{ QStringLiteral(":/img/close.png"),
-                QStringLiteral(":/img/close_active.png"),
+    : PushIcon{ QStringLiteral(":/img/close.png"), QStringLiteral(":/img/close_active.png"),
                 parent }
-{ }
+{
+}
 
 void ClosePushIcon::mousePressEvent(QMouseEvent *e)
 {
@@ -91,10 +81,10 @@ void ClosePushIcon::mousePressEvent(QMouseEvent *e)
 }
 
 MinimizePushIcon::MinimizePushIcon(QWidget *parent)
-    : PushIcon{ QStringLiteral(":/img/minimize.png"),
-                QStringLiteral(":/img/minimize_active.png"),
+    : PushIcon{ QStringLiteral(":/img/minimize.png"), QStringLiteral(":/img/minimize_active.png"),
                 parent }
-{ }
+{
+}
 
 void MinimizePushIcon::mousePressEvent(QMouseEvent *e)
 {
@@ -136,25 +126,23 @@ void WidthIcon::mousePressEvent(QMouseEvent *e)
 void WidthIcon::mouseDoubleClickEvent(QMouseEvent *e)
 {
     QRect windowGeometry = window()->geometry();
-    QRect screenGeometry = QApplication::screenAt(
-        mapToGlobal(e->pos()))->geometry();
+    QRect screenGeometry = QApplication::screenAt(mapToGlobal(e->pos()))->geometry();
 
     // double click while maximized
-    if (windowGeometry.width() == screenGeometry.width()
-     && windowGeometry.left() == screenGeometry.left()) {
+    if (windowGeometry.width() == screenGeometry.width() &&
+        windowGeometry.left() == screenGeometry.left())
+    {
         window()->setFixedWidth(_lastDoubleClickGeometry.width());
-        window()->setGeometry({ _lastDoubleClickGeometry.left(),
-                                windowGeometry.top(),
+        window()->setGeometry({ _lastDoubleClickGeometry.left(), windowGeometry.top(),
                                 _lastDoubleClickGeometry.width(),
-                                _lastDoubleClickGeometry.height()});
+                                _lastDoubleClickGeometry.height() });
     }
-    else { // normal double click
+    else
+    { // normal double click
         _lastDoubleClickGeometry = windowGeometry;
         window()->setFixedWidth(screenGeometry.width());
-        window()->setGeometry({ screenGeometry.left(),
-                                windowGeometry.top(),
-                                screenGeometry.width(),
-                                windowGeometry.height()});
+        window()->setGeometry({ screenGeometry.left(), windowGeometry.top(), screenGeometry.width(),
+                                windowGeometry.height() });
     }
 
     return e->accept();
@@ -171,12 +159,11 @@ void WidthIcon::mouseMoveEvent(QMouseEvent *e)
 {
     _active = true;
 
-    int newWidth = _startGeometry.width()
-            - _startPos.x()
-            + e->globalPosition().toPoint().x();
+    int newWidth = _startGeometry.width() - _startPos.x() + e->globalPosition().toPoint().x();
     newWidth = std::max(newWidth, MinWindowSize);
 
-    if (_moving) window()->setFixedWidth(newWidth);
+    if (_moving)
+        window()->setFixedWidth(newWidth);
 
     update();
 
@@ -189,19 +176,4 @@ void WidthIcon::leaveEvent(QEvent *e)
     update();
 
     return e->accept();
-}
-
-SettingsPushIcon::SettingsPushIcon(MainWindow *mainWindow, QWidget *parent)
-    : PushIcon{ QStringLiteral(":/img/settings.png"),
-                QStringLiteral(":/img/settings_active.png"),
-                parent },
-      _mainWindow{ mainWindow }
-{ }
-
-void SettingsPushIcon::mousePressEvent(QMouseEvent *e)
-{
-    SettingsDialog sd{ _mainWindow->windowOpacity(), this };
-    connect(&sd, &SettingsDialog::opacityChanged,
-            _mainWindow, &MainWindow::onOpacityChanged);
-    sd.exec();
 }

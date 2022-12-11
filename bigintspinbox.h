@@ -22,7 +22,7 @@ public:
     void stepBy(int step) override;
 
 signals:
-    void valueEdited(const std::vector<bool> &bigInt);
+    void valueEdited(const std::vector<bool> &bigInt, QObject *caller);
     void incrementPressed();
     void decrementPressed();
 

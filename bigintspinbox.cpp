@@ -1,17 +1,14 @@
 #include "bigintspinbox.h"
 
 #include <QLineEdit>
-#include <QTextStream>
 #include <QRegularExpression>
+#include <QTextStream>
 
-BigIntSpinBox::BigIntSpinBox(QWidget *parent)
-    : QAbstractSpinBox{ parent }
+BigIntSpinBox::BigIntSpinBox(QWidget *parent) : QAbstractSpinBox{ parent }
 {
-    connect(this, &QAbstractSpinBox::editingFinished,
-            this, &BigIntSpinBox::onEditingFinished);
+    connect(this, &QAbstractSpinBox::editingFinished, this, &BigIntSpinBox::onEditingFinished);
 
-    connect(lineEdit(), &QLineEdit::textEdited,
-            this, &BigIntSpinBox::onTextEdited);
+    connect(lineEdit(), &QLineEdit::textEdited, this, &BigIntSpinBox::onTextEdited);
 }
 
 void BigIntSpinBox::init(FormatRules::Style s, BigInt::Digits d)
@@ -19,10 +16,8 @@ void BigIntSpinBox::init(FormatRules::Style s, BigInt::Digits d)
     _formatStyle = s;
     _digits = d;
 
-    lineEdit()->setValidator(new QRegularExpressionValidator(
-                                 FormatRules::regex(_formatStyle,
-                                                    _digits),
-                             this));
+    lineEdit()->setValidator(
+        new QRegularExpressionValidator(FormatRules::regex(_formatStyle, _digits), this));
 
     setBigInt({});
 }
@@ -33,10 +28,8 @@ void BigIntSpinBox::setFormatStyle(FormatRules::Style s)
 
     _formatStyle = s;
 
-    lineEdit()->setValidator(new QRegularExpressionValidator(
-                                 FormatRules::regex(_formatStyle,
-                                                    _digits),
-                             this));
+    lineEdit()->setValidator(
+        new QRegularExpressionValidator(FormatRules::regex(_formatStyle, _digits), this));
 
     setBigInt(bigInt);
 }
@@ -55,8 +48,7 @@ void BigIntSpinBox::setBigInt(const std::vector<bool> &bigInt) const
 {
     const auto bigIntStr = BigInt::fromBoolVector(bigInt, _digits);
 
-    lineEdit()->setText(applyStyle(
-                            QString::fromStdString(bigIntStr)));
+    lineEdit()->setText(applyStyle(QString::fromStdString(bigIntStr)));
 }
 
 QAbstractSpinBox::StepEnabled BigIntSpinBox::stepEnabled() const
@@ -71,8 +63,10 @@ QAbstractSpinBox::StepEnabled BigIntSpinBox::stepEnabled() const
 
 void BigIntSpinBox::stepBy(int step)
 {
-    if (step == 1) emit incrementPressed();
-    if (step == -1) emit decrementPressed();
+    if (step == 1)
+        emit incrementPressed();
+    if (step == -1)
+        emit decrementPressed();
 }
 
 void BigIntSpinBox::onEditingFinished()
@@ -80,34 +74,42 @@ void BigIntSpinBox::onEditingFinished()
     const auto text = lineEdit()->text();
     const auto separator = FormatRules::separator(_formatStyle);
 
-    if (text.endsWith(separator)) {
+    if (text.endsWith(separator))
+    {
         lineEdit()->setText(text.chopped(separator.size()));
     }
 
-    try {
+    try
+    {
         setBigInt(getBigInt());
     }
-    catch (...) { }
+    catch (...)
+    {
+    }
 }
 
 void BigIntSpinBox::onTextEdited(const QString &text)
 {
-    try {
-        emit valueEdited(getBigInt());
+    try
+    {
+        emit valueEdited(getBigInt(), this);
 
         const auto prefix = FormatRules::prefix(_formatStyle, _digits);
         const auto separator = FormatRules::separator(_formatStyle);
 
-        const bool firstDigitWasZero = (text.size() == prefix.size() + 2)
-                                   && text.startsWith(prefix + "0");
+        const bool firstDigitWasZero =
+            (text.size() == prefix.size() + 2) && text.startsWith(prefix + "0");
         const bool cursorAtTheEnd = lineEdit()->cursorPosition() == text.size();
 
-        if (firstDigitWasZero && cursorAtTheEnd && text.back() != separator) {
+        if (firstDigitWasZero && cursorAtTheEnd && text.back() != separator)
+        {
             const auto withoutLeadingZero = prefix + text.back();
             lineEdit()->setText(withoutLeadingZero);
         }
     }
-    catch (...) { }
+    catch (...)
+    {
+    }
 
     update();
 }
@@ -120,7 +122,8 @@ QString BigIntSpinBox::applyStyle(const QString &bigIntStr) const
     const auto numLen = bigIntStr.length();
     const auto groupLen = FormatRules::groupLength(_formatStyle, _digits);
     const auto separator = FormatRules::separator(_formatStyle);
-    for (int i = 0; i < numLen; ++i) {
+    for (int i = 0; i < numLen; ++i)
+    {
         if (groupLen && i && !((numLen - i) % groupLen))
             result.append(separator);
 

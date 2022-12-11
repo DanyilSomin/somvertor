@@ -21,8 +21,7 @@ public:
     virtual ~PushIcon() = default;
 
 protected:
-    explicit PushIcon(const QString &pixMap,
-                      const QString &activePixMap,
+    explicit PushIcon(const QString &pixMap, const QString &activePixMap,
                       QWidget *parent = nullptr);
 
 private:
@@ -31,25 +30,18 @@ private:
     bool _active = false;
 };
 
-class ClosePushIcon : public PushIcon {
+class ClosePushIcon : public PushIcon
+{
 public:
     explicit ClosePushIcon(QWidget *parent);
     virtual void mousePressEvent(QMouseEvent *e) override;
 };
 
-class MinimizePushIcon : public PushIcon {
+class MinimizePushIcon : public PushIcon
+{
 public:
     explicit MinimizePushIcon(QWidget *parent);
     virtual void mousePressEvent(QMouseEvent *e) override;
-};
-
-class SettingsPushIcon : public PushIcon {
-public:
-    explicit SettingsPushIcon(MainWindow *mainWindow, QWidget *parent);
-    virtual void mousePressEvent(QMouseEvent *e) override;
-
-private:
-    MainWindow *_mainWindow;
 };
 
 class WidthIcon : public QWidget
@@ -67,8 +59,8 @@ public:
 private:
     QRect _lastDoubleClickGeometry{};
 
-    QRect _startGeometry{ };
-    QPoint _startPos{ };
+    QRect _startGeometry{};
+    QPoint _startPos{};
 
     bool _moving{ false };
     bool _active{ false };

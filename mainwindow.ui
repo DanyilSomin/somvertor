@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>483</width>
-    <height>51</height>
+    <height>64</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -56,8 +56,15 @@
       <property name="topMargin">
        <number>0</number>
       </property>
-      <item row="1" column="1" colspan="6">
-       <widget class="BigIntSpinBox" name="binSpinBox" native="true">
+      <item row="1" column="0">
+       <widget class="QLabel" name="binLabel">
+        <property name="text">
+         <string>Bin:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="BigIntSpinBox" name="decSpinBox" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -73,30 +80,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="5">
-       <widget class="Line" name="line_2">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="binLabel">
-        <property name="text">
-         <string>Bin:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QLabel" name="hexLabel">
-        <property name="text">
-         <string>Hex:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="6">
-       <widget class="QComboBox" name="styleComboBox"/>
-      </item>
       <item row="0" column="2">
        <widget class="Line" name="line">
         <property name="sizePolicy">
@@ -110,8 +93,8 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="BigIntSpinBox" name="decSpinBox" native="true">
+      <item row="1" column="1" colspan="6">
+       <widget class="BigIntSpinBox" name="binSpinBox" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -130,7 +113,37 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="7" rowspan="2">
+      <item row="0" column="6">
+       <widget class="QComboBox" name="styleComboBox"/>
+      </item>
+      <item row="0" column="5">
+       <widget class="Line" name="line_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="hexLabel">
+        <property name="text">
+         <string>Hex:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="7">
+       <widget class="QSlider" name="opacityHorizontalSlider">
+        <property name="minimum">
+         <number>10</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="7" rowspan="3">
        <widget class="RightToolBar" name="widget" native="true">
         <property name="minimumSize">
          <size>

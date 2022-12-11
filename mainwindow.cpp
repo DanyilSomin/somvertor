@@ -3,7 +3,9 @@
 
 #include <QShortcut>
 
-const QString MainWindow::propOpacity = QStringLiteral("opacity");
+const QString MainWindow::propOpacity = QStringLiteral("app/opacity");
+const QString MainWindow::propStyle = QStringLiteral("app/style");
+const QString MainWindow::propBigInt = QStringLiteral("app/bigint");
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -14,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     initSpinBoxes();
     initStyleComboBox();
     initShortcuts();
-    initSettings();
+    initOpacity();
 }
 
 MainWindow::~MainWindow()
@@ -23,7 +25,7 @@ MainWindow::~MainWindow()
     _settings.sync();
 }
 
-void MainWindow::updateStyle(int index)
+void MainWindow::updateStyle()
 {
     const auto style = ui->styleComboBox->currentData().value<FormatRules::Style>();
 
@@ -75,8 +77,25 @@ void MainWindow::switchStyle()
 void MainWindow::onOpacityChanged(int opacity)
 {
     const qreal newOpacity = opacity / 100.0;
-    _settings.setValue(propOpacity, newOpacity);
+    _settings.setValue(propOpacity, opacity);
     setWindowOpacity(newOpacity);
+}
+
+void MainWindow::onStyleChanged(int style)
+{
+    _settings.setValue(propStyle, style);
+    ui->styleComboBox->setCurrentIndex(style);
+    updateStyle();
+}
+
+void MainWindow::onBigIntChanged(const std::vector<bool> &bigInt, QObject *caller)
+{
+    if (caller != ui->binSpinBox)
+        ui->binSpinBox->setBigInt(bigInt);
+    if (caller != ui->decSpinBox)
+        ui->decSpinBox->setBigInt(bigInt);
+    if (caller != ui->hexSpinBox)
+        ui->hexSpinBox->setBigInt(bigInt);
 }
 
 void MainWindow::initSpinBoxes()
@@ -86,15 +105,7 @@ void MainWindow::initSpinBoxes()
     ui->hexSpinBox->init(FormatRules::Style::Plain, BigInt::Digits::Hex);
 
     auto connectSpinBox = [&](BigIntSpinBox *sb) {
-        connect(sb, &BigIntSpinBox::valueEdited, this, [&, sb](const auto &bigInt) {
-            if (sb != ui->binSpinBox)
-                ui->binSpinBox->setBigInt(bigInt);
-            if (sb != ui->decSpinBox)
-                ui->decSpinBox->setBigInt(bigInt);
-            if (sb != ui->hexSpinBox)
-                ui->hexSpinBox->setBigInt(bigInt);
-        });
-
+        connect(sb, &BigIntSpinBox::valueEdited, this, &MainWindow::onBigIntChanged);
         connect(sb, &BigIntSpinBox::incrementPressed, this, &MainWindow::increment);
         connect(sb, &BigIntSpinBox::decrementPressed, this, &MainWindow::decrement);
     };
@@ -111,7 +122,9 @@ void MainWindow::initStyleComboBox()
         ui->styleComboBox->addItem(FormatRules::styleName(style), QVariant::fromValue(style));
     }
 
-    connect(ui->styleComboBox, &QComboBox::currentIndexChanged, this, &MainWindow::updateStyle);
+    ui->styleComboBox->setCurrentIndex(_settings.value(propStyle, 0).toInt());
+    updateStyle();
+    connect(ui->styleComboBox, &QComboBox::currentIndexChanged, this, &MainWindow::onStyleChanged);
 }
 
 void MainWindow::initShortcuts()
@@ -122,4 +135,11 @@ void MainWindow::initShortcuts()
             &MainWindow::switchStyle);
 }
 
-void MainWindow::initSettings() { setWindowOpacity(_settings.value(propOpacity, 0.5).toReal()); }
+void MainWindow::initOpacity()
+{
+    const auto opacity = _settings.value(propOpacity, 100).toInt();
+    setWindowOpacity(std::max(opacity / 100.0, 0.1));
+    ui->opacityHorizontalSlider->setValue(opacity);
+    connect(ui->opacityHorizontalSlider, &QSlider::valueChanged, this,
+            &MainWindow::onOpacityChanged);
+}

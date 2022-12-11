@@ -35,9 +35,6 @@ set(PROJECT_SOURCES
         movewidget.cpp
         righttoolbar.h
         righttoolbar.cpp
-        settingsdialog.h
-        settingsdialog.cpp
-        settingsdialog.ui
         img.qrc
 )
 
